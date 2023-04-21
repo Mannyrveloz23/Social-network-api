@@ -1,71 +1,58 @@
-const {Schema, model} = require('mongoose');
+const { Schema, model } = require('mongoose');
+const moment = require('moment');
 
 const reactionSchema = new Schema(
-    {
-        reactionId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId()
-        },
-        reactionText: {
-            type: String,
-            require: true,
-            maxlength: 280
-        },
-        username: {
-            type: String,
-            require: true
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now,
-        }
+  {
+    reactionId: {
+      type: Schema.Types.ObjectId,
+      default: () => new Types.ObjectId(),
     },
-    {
-        toJSON: {
-            getters: true
-        }
-    }
+    reactionText: {
+      type: String,
+      required: true,
+      maxlength: 280,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+      get: (createdAtVal) => moment(createdAtVal).format('MMM DD, YYYY [at] hh:mm a'),
+    },
+  },
+  {
+    toJSON: {
+      getters: true,
+    },
+  }
 );
 
-reactionSchema.virtual('formattedCreatedAt').get(function() {
-    return this.createdAt.toLocaleString(); // Format timestamp however you like
-  });
-
-// Thought schema definition
-const thoughtSchema = new mongoose.Schema(
-    {
-      thoughtText: {
+const thoughtSchema = new Schema(
+   {
+    thoughtText: {
         type: String,
         required: true,
-        minlength: 1,
-        maxlength: 280
-      },
-      createdAt: {
-        type: Date,
-        default: Date.now
-      },
-      username: {
-        type: String,
-        required: true
-      },
-      reactions: [reactionSchema]
+        maxLength: 280,
     },
-    {
-      toJSON: {
-        virtuals: true,
-        getters: true
-      }
-    }
-  );
-  
-  thoughtSchema.virtual('reactionCount').get(function() {
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        required: true,
+    },
+    username: {
+        type: String,
+        required: true,
+    },
+    reactions: [reactionSchema]
+   }
+);
+
+thoughtSchema.virtual("reactionCount").get(function () {
     return this.reactions.length;
-  });
-  
-  thoughtSchema.virtual('formattedCreatedAt').get(function() {
-    return this.createdAt.toLocaleString(); // Format timestamp however you like
-  });
+});
 
-  const Thought = model('Thought', thoughtSchema);
+const Thoughts = model("Thoughts", thoughtSchema);
 
-  module.exports = Thought
+module.exports = Thoughts;
