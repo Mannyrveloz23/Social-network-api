@@ -17,17 +17,17 @@ module.exports = {
         Thought.create(req.body)
         .then((thoughts) => {
             return User.findOneAndUpdate(
-                {username: req.body.username},
+                {_id: req.body.userId},
                 {$push: {thoughts: thoughts._id}},
                 {new: true}
             );
         })
         .then((user) => {
             if (!user) {
-                res.status(404).json({message: "Thought not created"});
-            } else {
-                res.json("Thought created")
-            }
+                return res.status(404).json({message: "Thought not created"});
+            } 
+            res.json(user)
+            
         })
         .catch((err)=>res.status(500).json(err))
     },

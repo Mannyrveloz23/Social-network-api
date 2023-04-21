@@ -32,7 +32,7 @@ reactionSchema.virtual('formattedCreatedAt').get(function() {
   });
 
 // Thought schema definition
-const thoughtSchema = new mongoose.Schema(
+const thoughtSchema = new Schema(
     {
       thoughtText: {
         type: String,
