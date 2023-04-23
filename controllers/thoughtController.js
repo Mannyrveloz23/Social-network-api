@@ -17,7 +17,7 @@ module.exports = {
         Thought.create(req.body)
         .then((thoughts) => {
             return User.findOneAndUpdate(
-                {_id: req.body.userId},
+                {_id: req.body._id},
                 {$push: {thoughts: thoughts._id}},
                 {new: true}
             );
@@ -29,7 +29,11 @@ module.exports = {
             res.json(user)
             
         })
-        .catch((err)=>res.status(500).json(err))
+        .catch((err)=>{
+            
+            res.status(500).json(err);
+            console.log(err);
+        })
     },
 
     updateThought(req, res) {
